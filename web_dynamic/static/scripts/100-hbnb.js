@@ -15,29 +15,39 @@ $(document).ready(function () {
     });
 
     $('.locations input[type="checkbox"]').change(function () {
-        console.log("Checkbox changed");
-        if ($(this).is(':checked')) {
-            if ($(this).parent().parent().hasClass('states')) {
-                states[$(this).data('id')] = $(this).data('name');
-                console.log("State selected:", $(this).data('name'));
-            } else if ($(this).parent().parent().hasClass('cities')) {
-                cities[$(this).data('id')] = $(this).data('name');
-                console.log("City selected:", $(this).data('name'));
-            }
+        const checkboxContainer = $(this).parent().parent();
+        const isChecked = $(this).is(':checked');
+        const checkboxType = checkboxContainer.hasClass('states') ? 'state' : 'city';
+        const checkboxId = $(this).data('id');
+        const checkboxName = $(this).data('name');
+
+        if (isChecked) {
+          if (checkboxType === 'state') {
+              states[checkboxId] = checkboxName;
+              console.log("State selected:", checkboxName);
+          } else if (checkboxType === 'city') {
+              cities[checkboxId] = checkboxName;
+              console.log("City selected:", checkboxName);
+          }
         } else {
-            if ($(this).parent().parent().hasClass('states')) {
-                delete states[$(this).data('id')];
-                console.log("State deselected:", $(this).data('name'));
-            } else if ($(this).parent().parent().hasClass('cities')) {
-                delete cities[$(this).data('id')];
-                console.log("City deselected:", $(this).data('name'));
+            if (checkboxType === 'state') {
+               delete states[checkboxId];
+               console.log("State deselected:", checkboxName);
+            } else if (checkboxType === 'city') {
+               delete cities[checkboxId];
+               console.log("City deselected:", checkboxName);
             }
         }
+    });
 
-        const locationsList = [...Object.values(states), ...Object.values(cities)].join(', ');
+
+    function updateLocationsList() {
+        const statesList = Object.values(states).join(', ');
+        const citiesList = Object.values(cities).join(', ');
+        const locationsList = [statesList, citiesList].filter(Boolean).join(', ');
         console.log("Locations list:", locationsList);
         $('.locations h4').text(locationsList);
-    });
+    }
 
     function loadPlaces(placesSection, data) {
         data.forEach(place => {
@@ -63,8 +73,8 @@ $(document).ready(function () {
         contentType: 'application/json',
         data: JSON.stringify({}),
         success: function (data) {
-            const placesSection = $('section.places');
             console.log("Places search successful:", data);
+            const placesSection = $('section.places');
             loadPlaces(placesSection, data);
         },
         error: function (xhr, status, error) {
