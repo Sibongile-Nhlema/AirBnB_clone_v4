@@ -12,15 +12,37 @@ $(document).ready(function () {
     $('.amenities h4').text(amenitiesList);
   });
 
-  $.post('http://0.0.0.0:5001/api/v1/places_search/', JSON.stringify({}), (data) => {
-    const sectionPlaces = $('section.places');
-
+  function loadPlaces (placesSection, data) {
     data.forEach(place => {
-      const article = `<article><div class="title_box"><h2>${place.name}</h2><div class="price_by_night">$${place.price_by_night}</div></div><div class="information"><div class="max_guest">${place.max_guest} Guests</div><div class="number_rooms">${place.number_rooms} Bedrooms</div><div class="number_bathrooms">${place.number_bathrooms} Bathrooms</div></div><div class="description">${place.description}</div></article>`;
-      sectionPlaces.append(article);
+      const article = `<article>
+                          <div class="title_box">
+                              <h2>${place.name}</h2>
+                              <div class="price_by_night">$${place.price_by_night}</div>
+                          </div>
+                          <div class="information">
+                              <div class="max_guest">${place.max_guest} Guests</div>
+                              <div class="number_rooms">${place.number_rooms} Bedrooms</div>
+                              <div class="number_bathrooms">${place.number_bathrooms} Bathrooms</div>
+                          </div>
+                          <div class="description">${place.description}</div>
+                      </article>`;
+      placesSection.append(article);
     });
-  }).fail((error) => {
-    console.error('Error fetching places:', error);
+  }
+
+  $.ajax({
+    type: 'POST',
+    url: 'http://0.0.0.0:5001/api/v1/places_search/',
+    contentType: 'application/json',
+    data: JSON.stringify({}),
+    success: function (data) {
+      const placesSection = $('section.places');
+
+      loadPlaces(placesSection, data);
+    },
+    error: function (xhr, status, error) {
+      console.error('Error fetching places:', error);
+    }
   });
 
   $.get('http://0.0.0.0:5001/api/v1/status/', (data) => {
@@ -34,13 +56,20 @@ $(document).ready(function () {
   });
 
   $('button').on('click', () => {
-    $.post('http://0.0.0.0:5001/api/v1/places_search/', JSON.stringify({ amenities: Object.keys(amenities) }), (places) => {
-      const placesSection = $('section.places');
-      placesSection.empty();
-      $.each(places, (index, place) => {
-        const article = `<article><div class="title_box"><h2>${place.name}</h2><div class="price_by_night">$${place.price_by_night}</div></div><div class="information"><div class="max_guest">${place.max_guest} Guests</div><div class="number_rooms">${place.number_rooms} Bedrooms</div><div class="number_bathrooms">${place.number_bathrooms} Bathrooms</div></div><div class="description">${place.description}</div></article>`;
-        placesSection.append(article);
-      });
+    $.ajax({
+      type: 'POST',
+      url: 'http://0.0.0.0:5001/api/v1/places_search/',
+      contentType: 'application/json',
+      data: JSON.stringify({ amenities: Object.keys(amenities) }),
+      success: function (data) {
+        const placesSection = $('section.places');
+        placesSection.empty();
+
+        loadPlaces(placesSection, data);
+      },
+      error: function (xhr, status, error) {
+        console.error('Error fetching places:', error);
+      }
     });
   });
 });
