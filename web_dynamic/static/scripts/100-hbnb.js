@@ -34,18 +34,9 @@ $(document).ready(function () {
             if (checkboxType === 'state') {
                 const stateId = $(this).data('id');
                 const stateName = $(this).data('name');
-                
+                states[$(this).data('id')] = $(this).data('name');               
                 // Log selected state details
                 console.log("State selected - ID:", stateId, "Name:", stateName);
-
-                // Filter cities that belong to the selected state
-                const citiesInState = Object.values(citiesData).filter(city => city.state_id === stateId);
-                
-                // Add cities in the selected state to the cities object
-                citiesInState.forEach(city => {
-                    cities[city.id] = city.name;
-                    console.log("City selected:", city.name, "ID:", city.id, "State ID:", city.state_id);
-                });
 
                 // Update locations list display
                 updateLocationsList();
