@@ -60,10 +60,7 @@ $(document).ready(function () {
                         console.log("City deselected:", cityName);
                     }
                 });
-
-                // Log deselected state details
-                console.log("State deselected - ID:", stateId, "Name:", stateName);
-
+		delete states[$(this).data('id')];
                 // Update locations list display
                 updateLocationsList();
             } else if (checkboxType === 'city') {
