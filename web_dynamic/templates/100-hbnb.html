@@ -23,13 +23,13 @@
 	  <h3>States</h3>
 	  <h4>&nbsp;</h4>
 	  <div class="popover">
-	    <ul>
+	    <ul class="states">
 	      {% for state in states %}
 	      <li style="display: flex;" >
 		      <input type="checkbox" data-id="{{ state.id }}" data-name="{{ state.name }}">
 		<h2 style="padding-left: 10px";>{{ state[0].name }}:</h2>
 		</li>
-		<ul>
+		<ul class="city">
 		  {% for city in state[1] %}
 		  <li>
 			  <input type="checkbox" data-id="{{ city.id }}" data-name="{{ city.name }}">
