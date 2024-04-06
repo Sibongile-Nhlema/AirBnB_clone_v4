@@ -99,3 +99,23 @@
 .user {
   margin-bottom: 1.5%;
 }
+
+.description {
+  padding-bottom: 20px;
+}
+
+.reviews {
+  padding-top: 20px;
+  border-top: 1px solid #c6c5c5;
+}
+
+.visibility {
+  font-weight: 400;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #616161;
+}
+
+.visibility:hover {
+  color: #FF5A5F;
+}
